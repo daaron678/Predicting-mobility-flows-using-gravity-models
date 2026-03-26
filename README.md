@@ -5,3 +5,6 @@ Installing with conda is easiest since it also manages pandas versions and other
     Activate with 'conda activate [choice name for venv]'
     Install scikit-mobility using conda-forge channel: 'conda install -c conda-forge::scikit-mobility
     Use the kernel associated with the venv, VS Studio will ask user to install iPykernel.
+
+The Dropbox secrets are created by creating an app for the Dropbox dataset using 
+Dropbox API: https://www.dropbox.com/developers/documentation/python#tutorial 
