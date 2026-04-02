@@ -14,7 +14,7 @@ def authorize():
                                             use_pkce = True,
                                             consumer_secret=APP_SECRET,
                                             token_access_type='offline',
-                                            scope=['files.metadata.read', 'files.content.read'])
+                                            scope=['files.content.read'])
 
     authorize_url = auth_flow.start()
     print("1. Go to: " + authorize_url)
@@ -24,18 +24,17 @@ def authorize():
 
     try:
         oauth_result = auth_flow.finish(auth_code)
-        assert oauth_result.scope == 'files.metadata.read'
+        assert oauth_result.scope == 'files.content.read'
     except Exception as e:
         print('Error: %s' % (e,))
-        exit(1)
-        
-    dbx = dropbox.Dropbox(oauth2_access_token=oauth_result.access_token,
+        raise AssertionError("Authorization failed") from e
+    with dropbox.Dropbox(oauth2_access_token=oauth_result.access_token,
                      oauth2_access_token_expiration=oauth_result.expires_at,
                      oauth2_refresh_token=oauth_result.refresh_token,
                      app_key=APP_KEY,
-                     app_secret=APP_SECRET)
-    print("Successfully set up client!")
-    return dbx
+                     app_secret=APP_SECRET) : # as dbx:
+        print("Successfully set up client!")
+        # return dbx
 
 def load_data(dbx: dropbox.Dropbox, data_folder_path:str) -> tuple:
     """
